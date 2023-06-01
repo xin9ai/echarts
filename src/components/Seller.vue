@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, getCurrentInstance, onUnmounted, onMounted } from 'vue'
+import { ref, reactive, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue'
 import { getseller } from '@/api/seller'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -30,18 +30,87 @@ const showData = ref([])
 // 创建变量，保存定时器
 const timerId = ref()
 // 组件销毁钩子函数
-onUnmounted(() => {
+onBeforeUnmount(() => {
   clearInterval(timerId.value)
+  window.removeEventListener('resize', screenAdapter)
 })
 // dom加载完毕之后触发
 onMounted(() => {
   initEcharts()
   getData()
+  window.addEventListener('resize', screenAdapter)
+  screenAdapter()
 })
 // 初始化echarts实例对象
 const initEcharts = () => {
   echartsInstance.value = proxy.$echarts.init(document.getElementById('chart'), 'dark')
   console.log('echartsInstance.value', echartsInstance.value)
+  const option = {
+    title: {
+      text: '|  商家销售统计',
+      left: 20,
+      top: 20,
+      textStyle: {
+        fontSize: 50
+      }
+    },
+    grid: {
+      top: '20%',
+      left: '3%',
+      right: '6%',
+      bottom: '3%',
+      containLabel: true
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    xAxis: {
+      type: 'value'
+    },
+    yAxis: {
+      type: 'category'
+    },
+    series: [
+      {
+        type: 'bar',
+        barWidth: 66,
+        itemStyle: {
+          barBorderRadius: [0, 33, 33, 0],
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              {
+                offset: 1,
+                color: 'pink'
+                // #5052EE
+              },
+              {
+                offset: 0,
+                color: 'skyblue'
+                // #ABA6EE5
+              }
+            ],
+            global: false
+          }
+        },
+        label: {
+          show: true,
+          position: 'right',
+          textStyle: {
+            color: '#fff'
+          }
+        }
+      }
+    ]
+  }
+  echartsInstance.value.setOption(option)
   // 鼠标移入
   echartsInstance.value.on('mouseover', () => {
     clearInterval(timerId.value)
@@ -85,70 +154,12 @@ const updateEcharts = () => {
 
   // 图标配置项
   const option = {
-    title: {
-      text: '|  商家销售统计',
-      left: 20,
-      top: 20,
-      textStyle: {
-        fontSize: 50
-      }
-    },
-    grid: {
-      top: '20%',
-      left: '3%',
-      right: '6%',
-      bottom: '3%',
-      containLabel: true
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
-    },
-    xAxis: {
-      type: 'value'
-    },
     yAxis: {
-      type: 'category',
       data: selleNames
     },
     series: [
       {
-        // name:'',
-        type: 'bar',
-        data: sellevalues,
-        barWidth: 66,
-        itemStyle: {
-          barBorderRadius: [0, 33, 33, 0],
-          color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 1,
-            y2: 0,
-            colorStops: [
-              {
-                offset: 1,
-                color: 'pink'
-                // #5052EE
-              },
-              {
-                offset: 0,
-                color: 'skyblue'
-                // #ABA6EE5
-              }
-            ],
-            global: false
-          }
-        },
-        label: {
-          show: true,
-          position: 'right',
-          textStyle: {
-            color: '#fff'
-          }
-        }
+        data: sellevalues
       }
     ]
   }
@@ -167,6 +178,28 @@ const startInterval = () => {
     }
     updateEcharts()
   }, 3000)
+}
+
+// 当浏览器窗口发生变化会触发的方法
+const screenAdapter = () => {
+  const titleFontSize = (document.getElementById('chart')?.offsetWidth / 100) * 3.6
+  const dataOptions = {
+    title: {
+      textStyle: {
+        fontSize: titleFontSize
+      }
+    },
+    series: [
+      {
+        barWidth: titleFontSize,
+        itemStyle: {
+          barBorderRadius: [0, titleFontSize / 2, titleFontSize / 2, 0]
+        }
+      }
+    ]
+  }
+  echartsInstance.value.setOption(dataOptions)
+  echartsInstance.value.resize()
 }
 </script>
 <style lang='scss' scoped>
