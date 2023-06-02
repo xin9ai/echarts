@@ -1,5 +1,5 @@
 <template>
-  <div class="seller">
+  <div class="container">
     <div class="chart" id="chart"></div>
   </div>
 </template>
@@ -17,23 +17,21 @@ const echartsInstance = ref(null)
 const resultAllData = ref()
 // 页码
 const currentPage = ref(1)
-
 // 条数
 const Pagesize = ref(5)
-
 // 总页码
 const total = ref(0)
-
 // 每页保存的数据
 const showData = ref([])
-
 // 创建变量，保存定时器
 const timerId = ref()
+
 // 组件销毁钩子函数
 onBeforeUnmount(() => {
   clearInterval(timerId.value)
   window.removeEventListener('resize', screenAdapter)
 })
+
 // dom加载完毕之后触发
 onMounted(() => {
   initEcharts()
@@ -41,6 +39,7 @@ onMounted(() => {
   window.addEventListener('resize', screenAdapter)
   screenAdapter()
 })
+
 // 初始化echarts实例对象
 const initEcharts = () => {
   echartsInstance.value = proxy.$echarts.init(document.getElementById('chart'), 'dark')
@@ -111,10 +110,12 @@ const initEcharts = () => {
     ]
   }
   echartsInstance.value.setOption(option)
+
   // 鼠标移入
   echartsInstance.value.on('mouseover', () => {
     clearInterval(timerId.value)
   })
+
   // 鼠标移出
   echartsInstance.value.on('mouseout', () => {
     startInterval()
@@ -141,14 +142,18 @@ const getData = async () => {
     console.log(e)
   }
 }
+
 // 配置并渲染图标
 const updateEcharts = () => {
+
   // 分页获取数据
   const start = (currentPage.value - 1) * Pagesize.value
   const end = Pagesize.value * currentPage.value
   showData.value = resultAllData.value.slice(start, end)
+
   // 获取所有name数据
   const selleNames = showData.value.map((item) => item.name)
+
   // 获取所有value数据
   const sellevalues = showData.value.map((item) => item.value)
 
@@ -163,9 +168,11 @@ const updateEcharts = () => {
       }
     ]
   }
+
   // 渲染图标
   echartsInstance.value.setOption(option)
 }
+
 // 动态加载分页数据
 const startInterval = () => {
   if (timerId.value) {
