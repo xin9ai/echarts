@@ -1,5 +1,5 @@
 @import './base.css';
-
+@import './font/iconfont.css';
 canvas {
   border-radius: 20px;
 }

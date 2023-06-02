@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import SellerPage from '@/views/SellerPage.vue'
 import TrendPage from '@/views/TrendPage.vue'
-
+import MapPage from '@/views/MapPage.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/TrendPage'
+      redirect: '/MapPage'
     },
     {
       path: '/SellerPage',
@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/TrendPage',
       name: 'TrendPage',
       component: TrendPage
+    },
+    {
+      path: '/MapPage',
+      name: 'MapPage',
+      component: MapPage
     }
   ]
 })
