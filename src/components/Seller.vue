@@ -145,7 +145,6 @@ const getData = async () => {
 
 // 配置并渲染图标
 const updateEcharts = () => {
-
   // 分页获取数据
   const start = (currentPage.value - 1) * Pagesize.value
   const end = Pagesize.value * currentPage.value
@@ -209,5 +208,4 @@ const screenAdapter = () => {
   echartsInstance.value.resize()
 }
 </script>
-<style lang='scss' scoped>
-</style>
+<style lang="scss" scoped></style>

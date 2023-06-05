@@ -218,7 +218,7 @@ const handleSelect = (key) => {
   updateChart()
 }
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .title {
   position: absolute;
   top: 20px;

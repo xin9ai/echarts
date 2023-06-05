@@ -4,13 +4,10 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, getCurrentInstance, onBeforeUnmount } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { getProvinceMapInfo } from '@/utils/map_utils.js'
 import axios from 'axios'
+import { onMounted, ref, getCurrentInstance, onBeforeUnmount } from 'vue'
+import { getProvinceMapInfo } from '@/utils/map_utils.js'
 import { getmap } from '@/api/map'
-const router = useRouter()
-const route = useRoute()
 // 结构出proxy，通过proxy获取全局定义的属性和方法
 const { proxy } = getCurrentInstance()
 // 创建变量，用来保存echarts的实例对象
@@ -56,7 +53,7 @@ const initChart = async () => {
     const provinceInfo = getProvinceMapInfo(arg.name)
     console.log('provinceInfo==>', provinceInfo)
     try {
-      const result = await axios({ url: 'http://localhost:4001' + provinceInfo.path })
+      const result = await axios({ url: 'http://localhost:5173' + provinceInfo.path })
 
       // 使用echarts注册地图数据
       proxy.$echarts.registerMap(provinceInfo.key, result.data)
@@ -151,5 +148,4 @@ const revertMap = () => {
   })
 }
 </script>
-<style lang='scss' scoped>
-</style>
+<style lang="scss" scoped></style>

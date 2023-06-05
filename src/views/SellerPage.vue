@@ -11,6 +11,4 @@ import Seller from '@/components/Seller.vue'
 const router = useRouter()
 const route = useRoute()
 </script>
-<style lang='scss' scoped>
-
-</style>
+<style lang="scss" scoped></style>
